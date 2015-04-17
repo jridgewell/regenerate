@@ -18,7 +18,7 @@ CodePoint.prototype.addRange = function(start, end) {
     start = parseInt(start, 16) - 1;
     end = parseInt(end, 16);
     var data = this.data.slice();
-    while (++start <= end) {
+    while (start++ < end) {
         if (data.indexOf(start) === -1) data.push(start);
     }
     return new CodePoint(data);
@@ -38,7 +38,7 @@ CodePoint.prototype.removeRange = function(start, end) {
     end = parseInt(end, 16);
     var data = this.data.slice();
 
-    while (++start <= end) {
+    while (start++ < end) {
         var index = data.indexOf(start);
         if (index > -1) data.splice(index, 1);
     }
@@ -56,11 +56,7 @@ CodePoint.prototype.toString = function() {
             end = data[i];
         }
         --i;
-        if (end == start) {
-            combined.push(upperAndLowerRange(start));
-        } else {
-            combined.push(upperAndLowerRange(start, end));
-        }
+        combined.push(upperAndLowerRange(start, end));
     }
 
     if (combined.length > 1 | combined[0].length > 1) {
@@ -75,11 +71,10 @@ function upperAndLowerRange(start, end) {
         return upperAndLowerRange(start, 9) + upperAndLowerRange(10, end);
     } else {
         var starth = start.toString(16);
-        var endh = end == null ? starth : end.toString(16);
+        var endh = end.toString(16);
         var combined = starth;
         if (starth != endh) {
             if (start + 2 < end) combined += '-';
-            else if (start + 1 < end) combined += (start + 1).toString(16);
             combined += endh;
         }
         return /[a-f]/.test(combined) ? combined + combined.toUpperCase() : combined;
